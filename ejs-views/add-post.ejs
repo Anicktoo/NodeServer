@@ -1,17 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <title>Node.js Course | <%= title %></title>
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
-    <link href="/styles/styles.css" rel="stylesheet">
-</head>
+    <%- include('./partials/header.ejs') %>
 
 <body>
     <%- include('./partials/nav.ejs') %>
-    <form id="contact-form">
+    <form id="contact-form" method="post" action="./add-post">
         <div class="form-info">
             <label>Post Title
                 <input type="text" name="title">

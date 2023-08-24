@@ -28,6 +28,10 @@ app.listen(PORT, (error) => {
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 
+
+//Middleware, который парсит url строку
+app.use(express.urlencoded({ extended: false }));
+
 //Middleware который делает папку доступной клиенту (по умолчанию Node закрывает папки от клиента).
 //Данный пример использует вируальный путь styles. Такой папки может не быть, но она будет указана в URL. В поле статик указывается папка в которой на самом деле нужно искать файл.
 app.use('/styles', express.static('styles'));
@@ -53,12 +57,48 @@ app.get('/contacts', (req, res) => {
 
 app.get('/posts/:id', (req, res) => {
     const title = 'Post';
-    res.render(createPath('post'), { title });
+    const post = {
+        id: '1',
+        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem.',
+        title: 'Lorem impsum',
+        date: '05.05.2021',
+        author: 'Anicktoo',
+    };
+    res.render(createPath('post'), { title, post });
 });
 
 app.get('/posts', (req, res) => {
     const title = 'Posts';
-    res.render(createPath('posts'), { title });
+    const posts = [
+        {
+            id: '1',
+            text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem.',
+            title: 'Lorem impsum',
+            date: '05.05.2021',
+            author: 'Anicktoo',
+        },
+        {
+            id: '2',
+            text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem.',
+            title: 'Ipsum lorem',
+            date: '06.05.2021',
+            author: 'Anicktoo',
+        },
+    ];
+    res.render(createPath('posts'), { title, posts });
+});
+
+app.post('/add-post', (req, res) => {
+    const { title, author, text } = req.body;
+    const newDate = new Date();
+    const post = {
+        id: newDate,
+        date: newDate.toLocaleDateString(),
+        title,
+        author,
+        text
+    };
+    res.render(createPath('post'), { post, title });
 });
 
 app.get('/add-post', (req, res) => {
