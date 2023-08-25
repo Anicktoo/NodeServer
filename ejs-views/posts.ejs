@@ -7,7 +7,7 @@
     <%- include('./partials/nav.ejs') %>
     <h1>Posts:</h1>
     <ul>
-        <% posts.forEach(({id, title, author, date, text}) => { %>
+        <% posts.forEach(({id, title, author, createdAt, text}) => { %>
             <li>
                 <article>
                     <h2>
@@ -15,7 +15,7 @@
                     </h2>
                     <p><%= text %></p>
                         <div class="info">
-                            <span><%= date %></span>
+                            <span><%= createdAt.toLocaleDateString() %></span>
                             <span><%= author %></span>
                         </div>
                 </article>

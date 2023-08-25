@@ -1,6 +1,7 @@
 body {
-    padding-top: 80px;
-    min-height: calc(100vh - 90px);
+    margin: 0;
+    padding: 80px 20px 0 20px;
+    min-height: calc(100vh - 80px);
     font-family: "Montserrat", sans-serif;
     font-size: 20px;
     background: linear-gradient(to bottom, #00d2ff, #928dab);
@@ -64,6 +65,7 @@ h2 a {
 }
 
 form {
+    margin-top: 20px;
     background-color: rgba(0, 0, 0, 0.4);
     padding: 10px 20px;
     border-radius: 3px;
@@ -130,6 +132,10 @@ textarea {
     background: linear-gradient(to bottom, #00d2ff, #928dab);
     color: #fff;
     padding-top: 0;
+}
+
+.home h1 {
+    font-size: 60px;
 }
 
 .error h1 {

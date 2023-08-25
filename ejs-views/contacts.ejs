@@ -6,7 +6,7 @@
 <body>
     <%- include('./partials/nav.ejs') %>
     <h1>Contacts:</h1>
-    <ul>
+    <ul class="contacts">
         <% if (contacts.length) { %>
             <% contacts.forEach(({link, name}) => { %>
                 <li>

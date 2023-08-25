@@ -3,6 +3,7 @@ const path = require('path');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const Post = require('./models/post');
+const Contact = require('./models/contact');
 
 const PORT = 3000;
 const createPath = (page) => path.resolve(__dirname, 'ejs-views', `${page}.ejs`);
@@ -55,45 +56,40 @@ app.get('/', (req, res) => {
 
 app.get('/contacts', (req, res) => {
     const title = 'Contacts';
-    const contacts = [
-        { name: 'GitHub', link: 'https://github.com/Anicktoo' },
-        { name: 'Telegram', link: 'https://t.me/Anicktoo' },
-        { name: 'VK', link: 'https://vk.com/anicktoo' },
-    ];
-    res.render(createPath('contacts'), { contacts, title });
+    Contact
+        .find()
+        .then((contacts) => res.render(createPath('contacts'), { contacts, title }))
+        .catch((error) => {
+            console.log(error);
+            res.render(createPath('error'), { title: 'Error' });
+        });
 });
 
 app.get('/posts/:id', (req, res) => {
     const title = 'Post';
-    const post = {
-        id: '1',
-        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem.',
-        title: 'Lorem impsum',
-        date: '05.05.2021',
-        author: 'Anicktoo',
-    };
-    res.render(createPath('post'), { title, post });
+    Post
+        .findById(req.params.id)
+        .then((post) => {
+            res.render(createPath('post'), { title, post });
+        })
+        .catch((error) => {
+            console.log(error);
+            res.render(createPath('error'), { title: 'Error' });
+        });
 });
 
 app.get('/posts', (req, res) => {
     const title = 'Posts';
-    const posts = [
-        {
-            id: '1',
-            text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem.',
-            title: 'Lorem impsum',
-            date: '05.05.2021',
-            author: 'Anicktoo',
-        },
-        {
-            id: '2',
-            text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem.',
-            title: 'Ipsum lorem',
-            date: '06.05.2021',
-            author: 'Anicktoo',
-        },
-    ];
-    res.render(createPath('posts'), { title, posts });
+    Post
+        .find()
+        .sort({ createdAt: -1 })
+        .then((posts) => {
+            res.render(createPath('posts'), { title, posts });
+        })
+        .catch((error) => {
+            console.log(error);
+            res.render(createPath('error'), { title: 'Error' });
+        });
 });
 
 app.post('/add-post', (req, res) => {
@@ -101,7 +97,11 @@ app.post('/add-post', (req, res) => {
     const post = new Post({ title, author, text });
     post
         .save()
-        .then((result) => res.send(result))
+        .then((result) => {
+            res
+                .status(301)
+                .redirect(`/posts/${result._id}`);
+        })
         .catch((error) => {
             console.log(error);
             res.render(createPath('error'), { title: 'Error' })
