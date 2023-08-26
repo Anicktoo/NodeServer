@@ -2,8 +2,10 @@ const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const methodOverride = require('method-override');
 const Post = require('./models/post');
 const Contact = require('./models/contact');
+
 
 const PORT = 3000;
 const createPath = (page) => path.resolve(__dirname, 'ejs-views', `${page}.ejs`);
@@ -21,22 +23,8 @@ app.listen(PORT, (error) => {
     error ? console.log(error) : console.log(`Listening port ${PORT}`);
 });
 
-// middleware или промежуточное ПО.Функция отрабатывает и передает контроль дальше.
-// Middleware должен идти после listening но до возврата конкретных страниц.Порядок важен!
-// Можно писать их вручную (здесь логгирование инф-ии о запросе):
-// app.use((req, res, next) => {
-//     console.log(`path: ${req.path}`);
-//     console.log(`method: ${req.method}`);
-//     next();
-// });
-
-// Можно использовать готовые промежуточные обработчики:
-// https://expressjs.com/ru/resources/middleware.html
-
 // Используем morgan (logger), в котором уже есть метод для логирования инф-ии о запросе
-
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
-
 
 //Middleware, который парсит url строку
 app.use(express.urlencoded({ extended: false }));
@@ -45,9 +33,7 @@ app.use(express.urlencoded({ extended: false }));
 //Данный пример использует вируальный путь styles. Такой папки может не быть, но она будет указана в URL. В поле статик указывается папка в которой на самом деле нужно искать файл.
 app.use('/styles', express.static('styles'));
 
-// Другой способ сделать так:
-// app.use(express.static('styles'));
-//В таком случае в пути в html нужнго указать путь "/styles.css". И Node будет автоматически искать в статик папке styles.
+app.use(methodOverride('_method'));
 
 app.get('/', (req, res) => {
     const title = 'Home';
@@ -78,6 +64,48 @@ app.get('/posts/:id', (req, res) => {
         });
 });
 
+app.get('/edit/:id', (req, res) => {
+    const title = 'Edit Post';
+    Post
+        .findById(req.params.id)
+        .then((post) => {
+            res.render(createPath('edit-post'), { title, post });
+        })
+        .catch((error) => {
+            console.log(error);
+            res.render(createPath('error'), { title: 'Error' });
+        });
+});
+
+app.put('/edit/:id', (req, res) => {
+    console.log('OKAY');
+    const { title, author, text } = req.body;
+    const { id } = req.params;
+    Post
+        .findByIdAndUpdate(id, { title, author, text })
+        .then((result) => {
+            res
+                .status(301)
+                .redirect(`/posts/${id}`);
+        })
+        .catch((error) => {
+            console.log(error);
+            res.render(createPath('error'), { title: 'Error' });
+        });
+});
+
+app.delete('/posts/:id', (req, res) => {
+    Post
+        .findByIdAndDelete(req.params.id)
+        .then(() => {
+            res.sendStatus(200);
+        })
+        .catch((error) => {
+            console.log(error);
+            res.render(createPath('error'), { title: 'Error' });
+        });
+});
+
 app.get('/posts', (req, res) => {
     const title = 'Posts';
     Post
@@ -100,7 +128,7 @@ app.post('/add-post', (req, res) => {
         .then((result) => {
             res
                 .status(301)
-                .redirect(`/posts/${result._id}`);
+                .redirect(`/posts`);
         })
         .catch((error) => {
             console.log(error);

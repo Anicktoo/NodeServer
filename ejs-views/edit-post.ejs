@@ -5,18 +5,18 @@
 
 <body>
     <%- include('./partials/nav.ejs') %>
-    <form id="contact-form" method="post" action="/add-post">
+    <form id="contact-form" method="post" action="/edit/<%= post.id %>?_method=PUT">
         <div class="form-info">
             <label>Post Title
-                <input type="text" name="title">
+                <input type="text" name="title" value="<%= post.title %>">
             </label>
             <label>Author
-                <input type="text" name="author">
+                <input type="text" name="author" value="<%= post.author %>">
             </label>
         </div>
         <div class="form-text">
             <label>Post Text
-                <textarea name="text"></textarea>
+                <textarea name="text"><%= post.text %></textarea>
             </label>
         </div>
         <div class="form-button">

@@ -49,6 +49,7 @@ a {
 }
 
 article {
+    position: relative;
     background-color: rgba(0, 0, 0, 0.4);
     padding: 10px 20px;
     border-radius: 3px;
@@ -58,6 +59,15 @@ article {
 .info {
     display: flex;
     justify-content: space-between;
+}
+
+.post {
+    margin-top: 20px;
+}
+
+.post .info {
+    justify-content: flex-start;
+    gap: 50px;
 }
 
 h2 a {
@@ -152,4 +162,37 @@ textarea {
     text-transform: uppercase;
     font-size: 160px;
     margin-bottom: 20px;
+}
+
+.btn-edit,
+.btn-delete {
+    position: absolute;
+    top: 10px;
+    text-transform: uppercase;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* padding: 10px 15px; */
+    cursor: pointer;
+    border: 1px solid #000;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    width: 48px;
+    border-radius: 3px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.btn-edit:hover,
+.btn-delete:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.btn-edit {
+    right: 65px;
+}
+
+.btn-delete {
+    right: 10px;
 }

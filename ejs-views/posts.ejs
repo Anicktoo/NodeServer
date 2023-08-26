@@ -1,27 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <%- include('./partials/header.ejs') %>
+<%- include('./partials/header.ejs') %>
 
 <body>
     <%- include('./partials/nav.ejs') %>
     <h1>Posts:</h1>
     <ul>
         <% posts.forEach(({id, title, author, createdAt, text}) => { %>
-            <li>
-                <article>
-                    <h2>
-                        <a href="/posts/<%= id %>"><%= title %></a>
-                    </h2>
-                    <p><%= text %></p>
-                        <div class="info">
-                            <span><%= createdAt.toLocaleDateString() %></span>
-                            <span><%= author %></span>
-                        </div>
-                </article>
-            </li>
+        <li>
+            <article>
+                <h2>
+                    <a href="/posts/<%= id %>"><%= title %></a>
+                </h2>
+                <p><%= text %></p>
+                <div class="info">
+                    <span><%= createdAt.toLocaleDateString() %></span>
+                    <span><%= author %></span>
+                </div>
+                <button class="btn-delete" data-id="<%= id %>">
+                    <i class="fas fa-trash" data-id="<%= id %>"></i>
+                </button>
+            </article>
+        </li>
         <% }); %>
     </ul>
+
+    <script>
+        document.addEventListener('click', (e) => {
+            const id = e.target?.dataset?.id || null;
+            if (id) {
+                fetch(`/posts/${id}`, {
+                        method: 'DELETE'
+                    })
+                    .then(() => {
+                        window.location.reload();
+                    });
+            }
+        });
+    </script>
 </body>
 
 </html>
