@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const postRouter = require('./routes/post-routes');
+const postApiRouter = require('./routes/api-post-routes');
 const contactRouter = require('./routes/contact-router');
 const createPath = require('./helpers/create-path');
 const handleError = require('./helpers/handle-error');
@@ -40,5 +41,6 @@ app.get('/', (req, res) => {
 
 app.use(postRouter);
 app.use(contactRouter);
+app.use(postApiRouter);
 
 app.use((req, res) => handleError(res));

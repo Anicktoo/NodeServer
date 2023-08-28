@@ -5,15 +5,15 @@ const Schema = mongoose.Schema;
 const postSchema = new Schema({
     text: {
         type: String,
-        require: true,
+        required: true,
     },
     title: {
         type: String,
-        require: true,
+        required: true,
     },
     author: {
         type: String,
-        require: true,
+        required: true,
     },
 }, { timestamps: true });
 
