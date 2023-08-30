@@ -11,7 +11,6 @@ const { handleError } = require('./helpers/handle-error');
 const { errorMsg, successMsg } = require('./helpers/chalkMessage');
 
 const PORT = process.env.PORT;
-
 const app = express();
 app.set('view engine', 'ejs');
 
