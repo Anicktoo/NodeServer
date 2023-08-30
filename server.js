@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
@@ -32,7 +33,7 @@ app.use(express.urlencoded({ extended: false }));
 
 //Middleware который делает папку доступной клиенту (по умолчанию Node закрывает папки от клиента).
 //Данный пример использует вируальный путь styles. Такой папки может не быть, но она будет указана в URL. В поле статик указывается папка в которой на самом деле нужно искать файл.
-app.use('/styles', express.static('styles'));
+app.use(express.static(path.resolve(__dirname, 'styles')));
 
 app.use(methodOverride('_method'));
 
