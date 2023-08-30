@@ -1,6 +1,6 @@
 const Post = require('../models/post');
 const createPath = require('../helpers/create-path');
-const handleError = require('../helpers/handle-error');
+const { handleError } = require('../helpers/handle-error');
 
 
 const getPost = (req, res) => {
@@ -8,10 +8,13 @@ const getPost = (req, res) => {
     Post
         .findById(req.params.id)
         .then((post) => {
+            if (!post) {
+                throw new Error('Post not found');
+            }
             res.render(createPath('post'), { title, post });
         })
         .catch((error) => {
-            console.log(error);
+            handleError(res, error)
             res.render(createPath('error'), { title: 'Error' });
         });
 };
@@ -30,18 +33,23 @@ const getEditPost = (req, res) => {
     Post
         .findById(req.params.id)
         .then((post) => {
+            if (!post) {
+                throw new Error('Post not found');
+            }
             res.render(createPath('edit-post'), { title, post });
         })
         .catch((error) => handleError(res, error));
 };
 
 const editPost = (req, res) => {
-    console.log('OKAY');
     const { title, author, text } = req.body;
     const { id } = req.params;
     Post
         .findByIdAndUpdate(id, { title, author, text })
         .then((result) => {
+            if (!result) {
+                throw new Error('Post not found');
+            }
             res
                 .status(301)
                 .redirect(`/posts/${id}`);

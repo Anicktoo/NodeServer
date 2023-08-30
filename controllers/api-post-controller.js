@@ -1,8 +1,5 @@
 const Post = require('../models/post');
-
-const handleError = (res, error) => {
-    res.status(500).send(error.message);
-}
+const { handleApiError: handleError } = require('../helpers/handle-error');
 
 const getPost = (req, res) => {
     Post
